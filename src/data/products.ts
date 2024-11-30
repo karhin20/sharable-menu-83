@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase';
+
 export interface Product {
   id: number;
   name: string;
@@ -6,7 +8,21 @@ export interface Product {
   description: string;
 }
 
-export const products: Product[] = [
+export const fetchProducts = async (): Promise<Product[]> => {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .select('*');
+  
+  if (error) {
+    console.error('Error fetching menu items:', error);
+    return [];
+  }
+  
+  return data || [];
+};
+
+// Keeping the default products as fallback
+export const defaultProducts: Product[] = [
   {
     id: 1,
     name: "Margherita Pizza",

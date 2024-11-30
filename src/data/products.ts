@@ -9,19 +9,24 @@ export interface Product {
 }
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase
-    .from('menu_items')
-    .select('*');
-  
-  if (error) {
-    console.error('Error fetching menu items:', error);
-    return [];
+  try {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*');
+    
+    if (error) {
+      console.log('Falling back to default products:', error.message);
+      return defaultProducts;
+    }
+    
+    return data || defaultProducts;
+  } catch (error) {
+    console.log('Error fetching products, using defaults:', error);
+    return defaultProducts;
   }
-  
-  return data || [];
 };
 
-// Keeping the default products as fallback
+// Default products as fallback
 export const defaultProducts: Product[] = [
   {
     id: 1,

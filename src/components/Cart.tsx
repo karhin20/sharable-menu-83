@@ -22,11 +22,11 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Shopping Cart</SheetTitle>
+          <SheetTitle>Your Order</SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-8rem)] mt-4">
           {items.length === 0 ? (
-            <p className="text-center text-gray-500 mt-4">Your cart is empty</p>
+            <p className="text-center text-gray-500 mt-4">Your order is empty</p>
           ) : (
             <div className="space-y-4">
               {items.map((item) => (
@@ -65,7 +65,7 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
             <span className="font-bold">${total.toFixed(2)}</span>
           </div>
           <Button className="w-full" disabled={items.length === 0}>
-            Checkout
+            Place Order
           </Button>
         </div>
       </SheetContent>

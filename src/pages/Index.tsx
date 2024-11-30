@@ -1,12 +1,41 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Product, products } from "@/data/products";
+import { ProductGrid } from "@/components/ProductGrid";
+import { Cart } from "@/components/Cart";
+import { Header } from "@/components/Header";
 
 const Index = () => {
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleAddToCart = (product: Product) => {
+    setCartItems([...cartItems, product]);
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    const index = cartItems.findIndex((item) => item.id === productId);
+    if (index !== -1) {
+      const newItems = [...cartItems];
+      newItems.splice(index, 1);
+      setCartItems(newItems);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header
+        cartItemCount={cartItems.length}
+        onCartClick={() => setIsCartOpen(true)}
+      />
+      <main className="container mx-auto py-8">
+        <ProductGrid products={products} onAddToCart={handleAddToCart} />
+      </main>
+      <Cart
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={cartItems}
+        onRemoveItem={handleRemoveFromCart}
+      />
     </div>
   );
 };

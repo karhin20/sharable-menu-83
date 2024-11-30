@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Product, fetchProducts, defaultProducts } from "@/data/products";
+import { Product, fetchProducts, defaultProducts, createOrder, Order } from "@/data/products";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Cart } from "@/components/Cart";
 import { Header } from "@/components/Header";
 import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CartItem extends Product {
   quantity: number;
@@ -12,6 +13,7 @@ interface CartItem extends Product {
 const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { toast } = useToast();
 
   const { data: products = defaultProducts, isLoading } = useQuery({
     queryKey: ['menu-items'],
@@ -36,6 +38,38 @@ const Index = () => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
+  const handlePlaceOrder = async () => {
+    const orderItems = cartItems.map(item => ({
+      product: item,
+      quantity: item.quantity
+    }));
+
+    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    const order: Order = {
+      items: orderItems,
+      total,
+      status: 'pending'
+    };
+
+    const { success, orderId } = await createOrder(order);
+
+    if (success) {
+      toast({
+        title: "Order placed successfully!",
+        description: `Your order ID is: ${orderId}. You can track your order status in WhatsApp.`,
+      });
+      setCartItems([]);
+      setIsCartOpen(false);
+    } else {
+      toast({
+        title: "Error placing order",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -58,6 +92,7 @@ const Index = () => {
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
         onRemoveItem={handleRemoveFromCart}
+        onPlaceOrder={handlePlaceOrder}
       />
     </div>
   );

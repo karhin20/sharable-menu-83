@@ -8,6 +8,14 @@ export interface Product {
   description: string;
 }
 
+export interface Order {
+  id?: number;
+  items: { product: Product; quantity: number }[];
+  total: number;
+  status: 'pending' | 'confirmed' | 'completed';
+  created_at?: string;
+}
+
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
     const { data, error } = await supabase
@@ -23,6 +31,22 @@ export const fetchProducts = async (): Promise<Product[]> => {
   } catch (error) {
     console.log('Error fetching products, using defaults:', error);
     return defaultProducts;
+  }
+};
+
+export const createOrder = async (order: Order): Promise<{ success: boolean; orderId?: number }> => {
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([order])
+      .select('id')
+      .single();
+
+    if (error) throw error;
+    return { success: true, orderId: data.id };
+  } catch (error) {
+    console.error('Error creating order:', error);
+    return { success: false };
   }
 };
 

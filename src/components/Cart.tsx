@@ -17,9 +17,10 @@ interface CartProps {
   onClose: () => void;
   items: CartItem[];
   onRemoveItem: (productId: number) => void;
+  onPlaceOrder: () => void;
 }
 
-export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
+export const Cart = ({ isOpen, onClose, items, onRemoveItem, onPlaceOrder }: CartProps) => {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -71,7 +72,11 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
             <span className="font-semibold">Total:</span>
             <span className="font-bold">${total.toFixed(2)}</span>
           </div>
-          <Button className="w-full" disabled={items.length === 0}>
+          <Button 
+            className="w-full" 
+            disabled={items.length === 0}
+            onClick={onPlaceOrder}
+          >
             Place Order
           </Button>
         </div>

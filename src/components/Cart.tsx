@@ -1,4 +1,3 @@
-import { Product } from "@/data/products";
 import {
   Sheet,
   SheetContent,
@@ -8,15 +7,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+interface CartItem extends Product {
+  quantity: number;
+}
+
 interface CartProps {
   isOpen: boolean;
   onClose: () => void;
-  items: Product[];
+  items: CartItem[];
   onRemoveItem: (productId: number) => void;
 }
 
 export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
-  const total = items.reduce((sum, item) => sum + item.price, 0);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -43,7 +46,10 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem }: CartProps) => {
                     <div>
                       <h3 className="font-medium">{item.name}</h3>
                       <p className="text-sm text-gray-500">
-                        ${item.price.toFixed(2)}
+                        ${item.price.toFixed(2)} x {item.quantity}
+                      </p>
+                      <p className="text-sm font-semibold">
+                        Total: ${(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>

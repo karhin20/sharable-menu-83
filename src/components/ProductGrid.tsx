@@ -3,7 +3,7 @@ import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
   products: Product[];
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Product, quantity: number) => void;
 }
 
 export const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {

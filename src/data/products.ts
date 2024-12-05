@@ -18,21 +18,30 @@ export interface Order {
 
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
+    console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
     console.log('Fetching products from Supabase...');
+    
     const { data, error } = await supabase
       .from('menu_items')
-      .select('*');
+      .select('*')
+      .throwOnError();
     
     if (error) {
-      console.error('Error fetching products:', error.message);
+      console.error('Supabase error:', error);
       console.log('Falling back to default products');
       return defaultProducts;
     }
     
+    if (!data || data.length === 0) {
+      console.log('No products found, falling back to default products');
+      return defaultProducts;
+    }
+    
     console.log('Fetched products:', data);
-    return data || defaultProducts;
+    return data;
   } catch (error) {
     console.error('Error fetching products:', error);
+    console.log('Falling back to default products');
     return defaultProducts;
   }
 };

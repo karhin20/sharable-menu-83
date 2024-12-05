@@ -18,18 +18,21 @@ export interface Order {
 
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
+    console.log('Fetching products from Supabase...');
     const { data, error } = await supabase
       .from('menu_items')
       .select('*');
     
     if (error) {
-      console.log('Falling back to default products:', error.message);
+      console.error('Error fetching products:', error.message);
+      console.log('Falling back to default products');
       return defaultProducts;
     }
     
+    console.log('Fetched products:', data);
     return data || defaultProducts;
   } catch (error) {
-    console.log('Error fetching products, using defaults:', error);
+    console.error('Error fetching products:', error);
     return defaultProducts;
   }
 };

@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Product, fetchProducts, defaultProducts, createOrder, Order } from "@/data/products";
+import { Product, fetchProducts, products } from "@/data/products";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Cart } from "@/components/Cart";
 import { Header } from "@/components/Header";
@@ -15,8 +16,8 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { toast } = useToast();
 
-  const { data: products = defaultProducts, isLoading } = useQuery({
-    queryKey: ['menu-items'],
+  const { data: productList = products, isLoading } = useQuery({
+    queryKey: ['products'],
     queryFn: fetchProducts,
   });
 
@@ -38,36 +39,34 @@ const Index = () => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
-  const handlePlaceOrder = async () => {
-    const orderItems = cartItems.map(item => ({
-      product: item,
-      quantity: item.quantity
-    }));
-
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    const order: Order = {
-      items: orderItems,
-      total,
-      status: 'pending'
+  const handlePlaceOrder = () => {
+    const orderSummary = {
+      items: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        total: item.price * item.quantity
+      })),
+      total: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      itemCount: cartItems.reduce((sum, item) => sum + item.quantity, 0)
     };
 
-    const { success, orderId } = await createOrder(order);
-
-    if (success) {
-      toast({
-        title: "Order placed successfully!",
-        description: `Your order ID is: ${orderId}. You can track your order status in WhatsApp.`,
-      });
-      setCartItems([]);
-      setIsCartOpen(false);
-    } else {
-      toast({
-        title: "Error placing order",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
+    // Send order data to parent window (chatbot)
+    if (window.parent) {
+      window.parent.postMessage({
+        type: 'ORDER_SELECTED',
+        data: orderSummary
+      }, '*');
     }
+
+    toast({
+      title: "Order confirmed!",
+      description: "Your selection has been sent to continue the purchase process.",
+    });
+
+    setCartItems([]);
+    setIsCartOpen(false);
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -84,7 +83,7 @@ const Index = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <ProductGrid products={products} onAddToCart={handleAddToCart} />
+          <ProductGrid products={productList} onAddToCart={handleAddToCart} />
         )}
       </main>
       <Cart

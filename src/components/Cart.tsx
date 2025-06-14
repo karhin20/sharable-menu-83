@@ -1,3 +1,4 @@
+
 import {
   Sheet,
   SheetContent,
@@ -77,7 +78,7 @@ export const Cart = ({ isOpen, onClose, items, onRemoveItem, onPlaceOrder }: Car
             disabled={items.length === 0}
             onClick={onPlaceOrder}
           >
-            Place Order
+            Confirm Selection
           </Button>
         </div>
       </SheetContent>

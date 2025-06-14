@@ -1,4 +1,3 @@
-import { supabase } from '@/lib/supabase';
 
 export interface Product {
   id: number;
@@ -17,53 +16,13 @@ export interface Order {
 }
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  try {
-    console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-    console.log('Fetching products from Supabase...');
-    
-    const { data, error } = await supabase
-      .from('menu_items')
-      .select('*')
-      .throwOnError();
-    
-    if (error) {
-      console.error('Supabase error:', error);
-      console.log('Falling back to default products');
-      return defaultProducts;
-    }
-    
-    if (!data || data.length === 0) {
-      console.log('No products found, falling back to default products');
-      return defaultProducts;
-    }
-    
-    console.log('Fetched products:', data);
-    return data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    console.log('Falling back to default products');
-    return defaultProducts;
-  }
+  // Simulate API call delay for better UX
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return products;
 };
 
-export const createOrder = async (order: Order): Promise<{ success: boolean; orderId?: number }> => {
-  try {
-    const { data, error } = await supabase
-      .from('orders')
-      .insert([order])
-      .select('id')
-      .single();
-
-    if (error) throw error;
-    return { success: true, orderId: data.id };
-  } catch (error) {
-    console.error('Error creating order:', error);
-    return { success: false };
-  }
-};
-
-// Default products as fallback
-export const defaultProducts: Product[] = [
+// Available products
+export const products: Product[] = [
   {
     id: 1,
     name: "Margherita Pizza",

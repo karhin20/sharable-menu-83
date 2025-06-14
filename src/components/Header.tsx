@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 
@@ -14,12 +13,12 @@ export const Header = ({ cartItemCount, onCartClick }: HeaderProps) => {
         <div className="mr-4 hidden md:flex">
           <a className="mr-6 flex items-center space-x-2" href="/">
             <span className="hidden font-bold sm:inline-block">
-              Fresh Food Market
+              Ghana Fresh Market
             </span>
           </a>
         </div>
         <div className="flex md:hidden">
-          <span className="font-bold text-lg">Fresh Food Market</span>
+          <span className="font-bold text-lg">Ghana Fresh Market</span>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <Button

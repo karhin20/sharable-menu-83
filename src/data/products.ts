@@ -1,4 +1,3 @@
-
 export interface Product {
   id: number;
   name: string;
@@ -39,7 +38,7 @@ export const products: Product[] = [
   // Tubers
   {
     id: 1,
-    name: "Yam (Ede)",
+    name: "Yam",
     price: 8.50,
     image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655",
     description: "Fresh white yam, perfect for pounding or boiling with palm nut soup",
@@ -49,7 +48,7 @@ export const products: Product[] = [
   },
   {
     id: 2,
-    name: "Cassava (Bankye)",
+    name: "Cassava",
     price: 3.00,
     image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655",
     description: "Fresh cassava root, ideal for gari, fufu, or boiling",
@@ -59,7 +58,7 @@ export const products: Product[] = [
   },
   {
     id: 3,
-    name: "Sweet Potato (Abodwee)",
+    name: "Sweet Potato",
     price: 4.50,
     image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655",
     description: "Sweet orange potatoes, great for roasting or boiling",
@@ -69,7 +68,7 @@ export const products: Product[] = [
   },
   {
     id: 4,
-    name: "Cocoyam (Mankani)",
+    name: "Cocoyam",
     price: 6.00,
     image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655",
     description: "Traditional cocoyam, perfect for ampesi or fufu",
@@ -91,7 +90,7 @@ export const products: Product[] = [
   },
   {
     id: 6,
-    name: "Maize (Aburo)",
+    name: "Maize",
     price: 8.00,
     image: "https://images.unsplash.com/photo-1586201375761-83865001e31c",
     description: "Fresh maize corn, ideal for kenkey, banku, or roasting",
@@ -101,7 +100,7 @@ export const products: Product[] = [
   },
   {
     id: 7,
-    name: "Millet (Awi)",
+    name: "Millet",
     price: 15.00,
     image: "https://images.unsplash.com/photo-1586201375761-83865001e31c",
     description: "Traditional northern Ghana millet for porridge and tuo zaafi",
@@ -111,7 +110,7 @@ export const products: Product[] = [
   },
   {
     id: 8,
-    name: "Sorghum (Masa)",
+    name: "Sorghum",
     price: 13.50,
     image: "https://images.unsplash.com/photo-1586201375761-83865001e31c",
     description: "Quality sorghum grain for traditional northern dishes",
@@ -133,7 +132,7 @@ export const products: Product[] = [
   },
   {
     id: 10,
-    name: "Okra (Nkruma)",
+    name: "Okra",
     price: 3.50,
     image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83",
     description: "Fresh okra pods, ideal for okra stew and soup",
@@ -207,7 +206,7 @@ export const products: Product[] = [
   // Fruits
   {
     id: 17,
-    name: "Plantain (Kwadu)",
+    name: "Plantain",
     price: 2.00,
     image: "https://images.unsplash.com/photo-1603833665858-e61d17a86224",
     description: "Fresh plantain for kelewele, ampesi, or frying",
@@ -227,7 +226,7 @@ export const products: Product[] = [
   },
   {
     id: 19,
-    name: "Pineapple (Aborobe)",
+    name: "Pineapple",
     price: 5.00,
     image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6",
     description: "Sweet Ghana Gold pineapple, locally grown",
@@ -249,7 +248,7 @@ export const products: Product[] = [
   // Legumes
   {
     id: 21,
-    name: "Black-eyed Peas (Adua)",
+    name: "Black-eyed Peas",
     price: 12.00,
     image: "https://images.unsplash.com/photo-1586201375761-83865001e31c",
     description: "Quality black-eyed peas for red red and koose",

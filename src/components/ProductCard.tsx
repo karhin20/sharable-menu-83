@@ -71,7 +71,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <div className="mt-4 flex items-center justify-between">
           <div>
             <span className="text-xl font-bold text-primary">
-              ${product.price.toFixed(2)}
+              ₵{product.price.toFixed(2)}
             </span>
             <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
           </div>

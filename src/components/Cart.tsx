@@ -69,10 +69,10 @@ export const Cart = ({
                     <div className="flex-1">
                       <h3 className="font-medium">{item.name}</h3>
                       <p className="text-sm text-gray-500">
-                        ${item.price.toFixed(2)} {item.unit}
+                        ₵{item.price.toFixed(2)} {item.unit}
                       </p>
                       <p className="text-sm font-semibold">
-                        Total: ${(item.price * item.quantity).toFixed(2)}
+                        Total: ₵{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export const Cart = ({
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
           <div className="flex justify-between mb-4">
             <span className="font-semibold">Total ({totalItems} items):</span>
-            <span className="font-bold text-lg">${total.toFixed(2)}</span>
+            <span className="font-bold text-lg">₵{total.toFixed(2)}</span>
           </div>
           <Button 
             className="w-full" 

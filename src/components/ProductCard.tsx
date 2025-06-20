@@ -1,4 +1,3 @@
-
 import { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,7 +49,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 animate-fade-in ${!product.inStock ? 'opacity-60' : ''}`}>
       <div className="relative">
         <img
-          src={product.image}
+          src={product.image_url}
           alt={product.name}
           className="w-full h-48 object-cover"
         />

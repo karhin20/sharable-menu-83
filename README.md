@@ -67,3 +67,8 @@ Simply open [Lovable](https://lovable.dev/projects/79f26b43-b6e6-46b4-adba-3bdce
 ## I want to use a custom domain - is that possible?
 
 We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+
+## Supabase Integration
+- Supabase client is set up in `src/lib/supabaseClient.ts`
+- Database types are in `src/types/supabase.ts`
+- Use the `supabase` client for all database operations in your React components.

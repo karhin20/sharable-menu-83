@@ -1,15 +1,29 @@
-
 import { useState, useMemo, useEffect } from "react";
-import { Product, fetchProducts, products } from "@/data/products";
+import { Product, fetchProducts } from "@/data/products";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Cart } from "@/components/Cart";
 import { Header } from "@/components/Header";
 import { SearchAndFilters } from "@/components/SearchAndFilters";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
+import { supabase } from "@/lib/supabaseClient";
+
+// API configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_KEY = import.meta.env.VITE_API_KEY;
+
+// Configure axios defaults
+axios.defaults.baseURL = API_BASE_URL;
+axios.defaults.headers.common["X-API-Key"] = API_KEY;
 
 interface CartItem extends Product {
   quantity: number;
+}
+
+interface SessionUser {
+  user_id: string;
+  phone_number: string;
 }
 
 const Index = () => {
@@ -17,12 +31,47 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const { toast } = useToast();
 
-  const { data: productList = products, isLoading } = useQuery({
+  const { data: productList = [], isLoading, error: productsError } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
+    retry: 3,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  // Extract session token from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const session = params.get("session");
+    if (session) {
+      // Fetch session info from Supabase
+      (supabase as any)
+        .from("sessions")
+        .select("*, users:user_id(*)")
+        .eq("session_token", session)
+        .limit(1)
+        .then(({ data, error }: { data: any; error: any }) => {
+          if (error) {
+            console.error("Error fetching session:", error);
+            toast({
+              title: "Session Error",
+              description: "Unable to load your session. Please try again.",
+              variant: "destructive",
+            });
+            return;
+          }
+          if (data && data[0]) {
+            setSessionUser({
+              user_id: data[0].user_id || data[0].users?.id || "",
+              phone_number: data[0].users?.phone_number || data[0].phone_number || "",
+            });
+          }
+        });
+    }
+  }, [toast]);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -32,6 +81,8 @@ const Index = () => {
         setCartItems(JSON.parse(savedCart));
       } catch (error) {
         console.error('Error loading cart from localStorage:', error);
+        // Clear invalid cart data
+        localStorage.removeItem('foodMarketCart');
       }
     }
   }, []);
@@ -65,11 +116,11 @@ const Index = () => {
     });
   };
 
-  const handleRemoveFromCart = (productId: number) => {
+  const handleRemoveFromCart = (productId: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
-  const handleUpdateQuantity = (productId: number, newQuantity: number) => {
+  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       handleRemoveFromCart(productId);
       return;
@@ -84,39 +135,77 @@ const Index = () => {
     );
   };
 
-  const handlePlaceOrder = () => {
-    const orderSummary = {
-      items: cartItems.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        unit: item.unit,
-        category: item.category,
-        total: item.price * item.quantity
-      })),
-      total: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-      itemCount: cartItems.reduce((sum, item) => sum + item.quantity, 0)
-    };
-
-    // Send order data to parent window (chatbot)
-    if (window.parent) {
-      window.parent.postMessage({
-        type: 'ORDER_SELECTED',
-        data: orderSummary
-      }, '*');
+  const handlePlaceOrder = async () => {
+    if (!sessionUser?.user_id || !sessionUser?.phone_number) {
+      toast({
+        title: "Missing user info",
+        description: "Please access this page from your WhatsApp link or contact support.",
+        variant: "destructive",
+      });
+      return;
     }
 
-    toast({
-      title: "Order confirmed!",
-      description: "Your selection has been sent to continue the purchase process.",
-    });
+    if (cartItems.length === 0) {
+      toast({
+        title: "Empty cart",
+        description: "Please add items to your cart before placing an order.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setCartItems([]);
-    setIsCartOpen(false);
+    setIsPlacingOrder(true);
+    try {
+      const orderPayload = {
+        user_id: sessionUser.user_id,
+        phone_number: sessionUser.phone_number,
+        items: cartItems.map(item => ({ product_id: item.id, quantity: item.quantity })),
+        total_amount: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      };
+
+      const res = await axios.post("/confirm-items", orderPayload);
+      
+      toast({
+        title: "Order confirmed!",
+        description: (
+          <div className="space-y-2">
+            <p>Please check your WhatsApp for delivery options and payment details.</p>
+            <p className="text-sm text-gray-600">
+              You'll be asked to choose between delivery or pickup, and if delivery is selected, 
+              you'll need to share your location.
+            </p>
+          </div>
+        ),
+        duration: 15000,
+      });
+
+      // Clear cart and close it
+      setCartItems([]);
+      setIsCartOpen(false);
+    } catch (err: any) {
+      console.error("Order placement error:", err);
+      toast({
+        title: "Order failed",
+        description: err?.response?.data?.detail || err.message || "Failed to place order. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Show error toast if products fail to load
+  useEffect(() => {
+    if (productsError) {
+      toast({
+        title: "Error loading products",
+        description: "Please refresh the page to try again.",
+        variant: "destructive",
+      });
+    }
+  }, [productsError, toast]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -141,6 +230,10 @@ const Index = () => {
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
+        ) : productsError ? (
+          <div className="text-center py-8">
+            <p className="text-red-500">Failed to load products. Please try again.</p>
+          </div>
         ) : (
           <>
             <div className="mb-4 text-sm text-gray-600">
@@ -154,8 +247,8 @@ const Index = () => {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
-        onRemoveItem={handleRemoveFromCart}
-        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={(productId) => handleRemoveFromCart(String(productId))}
+        onUpdateQuantity={(productId, newQuantity) => handleUpdateQuantity(String(productId), newQuantity)}
         onPlaceOrder={handlePlaceOrder}
       />
     </div>

@@ -6,9 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
-env
-Brains
+/.env
+/env
+/Brains
 node_modules
 dist
 dist-ssr
@@ -24,4 +24,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env
+/.env

@@ -3,11 +3,12 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Product } from "@/data/products";
-import { Plus, Minus, Trash2 } from "lucide-react";
+import { Plus, Minus, Trash2, Loader2, Send } from "lucide-react";
 
 interface CartItem extends Product {
   quantity: number;
@@ -20,6 +21,7 @@ interface CartProps {
   onRemoveItem: (productId: string) => void;
   onUpdateQuantity: (productId: string, newQuantity: number) => void;
   onPlaceOrder: () => void;
+  isPlacingOrder: boolean;
 }
 
 export const Cart = ({ 
@@ -28,7 +30,8 @@ export const Cart = ({
   items, 
   onRemoveItem, 
   onUpdateQuantity,
-  onPlaceOrder 
+  onPlaceOrder,
+  isPlacingOrder,
 }: CartProps) => {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -161,19 +164,35 @@ export const Cart = ({
             </div>
           )}
         </ScrollArea>
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
-          <div className="flex justify-between mb-4">
-            <span className="font-semibold">Total ({totalItems} items):</span>
-            <span className="font-bold text-lg">₵{total.toFixed(2)}</span>
+        <SheetFooter>
+          <div className="w-full">
+            <div className="flex justify-between items-center font-bold text-lg mb-4">
+              <span>Subtotal</span>
+              <span>GHS {total.toFixed(2)}</span>
+            </div>
+            <Button 
+              className="w-full" 
+              size="lg" 
+              onClick={onPlaceOrder}
+              disabled={items.length === 0 || isPlacingOrder}
+            >
+              {isPlacingOrder ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Placing Order...
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Confirm & Place Order
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-center text-gray-400 mt-2">
+              You will be redirected to WhatsApp to confirm delivery details and payment.
+            </p>
           </div>
-          <Button 
-            className="w-full" 
-            disabled={items.length === 0}
-            onClick={onPlaceOrder}
-          >
-            Confirm Selection
-          </Button>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

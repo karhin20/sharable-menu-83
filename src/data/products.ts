@@ -1,11 +1,36 @@
-import { supabase } from "@/lib/supabaseClient";
-import type { Database } from "@/types/supabase";
+import { z } from 'zod';
+import axios from "axios";
 
-export type Product = Database["public"]["Tables"]["products"]["Row"] & {
-  description?: string;
-  category?: string;
-  unit?: string;
-  inStock?: boolean;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+// Zod schema for validation
+const ProductSchema = z.object({
+  id: z.string(),
+  created_at: z.string().datetime(),
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  image_url: z.string().url(),
+  category: z.string(),
+  unit: z.string(),
+  available_stock: z.boolean(),
+});
+
+export type Product = z.infer<typeof ProductSchema>;
+
+export const fetchProducts = async (): Promise<Product[]> => {
+    const response = await axios.get(`${API_BASE_URL}/public/products`);
+    
+    // Validate the response data with Zod
+    const validationResult = z.array(ProductSchema).safeParse(response.data);
+    
+    if (!validationResult.success) {
+      console.error("Zod validation error:", validationResult.error);
+      // You could throw an error or return an empty array
+      throw new Error("Invalid product data from server.");
+    }
+    
+    return validationResult.data;
 };
 
 export interface Order {
@@ -15,20 +40,6 @@ export interface Order {
   status: 'pending' | 'confirmed' | 'completed';
   created_at?: string;
 }
-
-export const fetchProducts = async (): Promise<Product[]> => {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .order("name", { ascending: true });
-  if (error) throw error;
-  
-  // Map database response to Product type, converting `available_stock` to `inStock`
-  return (data || []).map(product => ({
-    ...product,
-    inStock: product.available_stock === 1,
-  }));
-};
 
 export const categories = [
   { id: "all", name: "All Items" },

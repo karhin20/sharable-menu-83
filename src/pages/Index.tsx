@@ -7,7 +7,6 @@ import { SearchAndFilters } from "@/components/SearchAndFilters";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import { supabase } from "@/lib/supabaseClient";
 
 // API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -21,17 +20,12 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-interface SessionUser {
-  user_id: string;
-  phone_number: string;
-}
-
 const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const { toast } = useToast();
 
@@ -47,28 +41,12 @@ const Index = () => {
     const params = new URLSearchParams(window.location.search);
     const session = params.get("session");
     if (session) {
-      // Fetch session info from Supabase
-      (supabase as any)
-        .from("sessions")
-        .select("*, users:user_id(*)")
-        .eq("session_token", session)
-        .limit(1)
-        .then(({ data, error }: { data: any; error: any }) => {
-          if (error) {
-            console.error("Error fetching session:", error);
-            toast({
-              title: "Session Error",
-              description: "Unable to load your session. Please try again.",
-              variant: "destructive",
-            });
-            return;
-          }
-          if (data && data[0]) {
-            setSessionUser({
-              user_id: data[0].user_id || data[0].users?.id || "",
-              phone_number: data[0].users?.phone_number || data[0].phone_number || "",
-            });
-          }
+        setSessionToken(session);
+    } else {
+        toast({
+            title: "Invalid Session",
+            description: "No session token found. Please use the link provided in WhatsApp.",
+            variant: "destructive",
         });
     }
   }, [toast]);
@@ -96,7 +74,7 @@ const Index = () => {
   const filteredProducts = useMemo(() => {
     return productList.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.description.toLowerCase().includes(searchTerm.toLowerCase());
+                           (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
@@ -136,9 +114,9 @@ const Index = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (!sessionUser?.user_id || !sessionUser?.phone_number) {
+    if (!sessionToken) {
       toast({
-        title: "Missing user info",
+        title: "Missing session token",
         description: "Please access this page from your WhatsApp link or contact support.",
         variant: "destructive",
       });
@@ -157,21 +135,28 @@ const Index = () => {
     setIsPlacingOrder(true);
     try {
       const orderPayload = {
-        user_id: sessionUser.user_id,
-        phone_number: sessionUser.phone_number,
+        session_token: sessionToken,
         items: cartItems.map(item => ({ product_id: item.id, quantity: item.quantity })),
         total_amount: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
       };
 
-      const res = await axios.post("/confirm-items", orderPayload);
+      await axios.post("/confirm-items", orderPayload);
       
       toast({
         title: "Order Placed!",
         description: "We've received your order. Please return to WhatsApp to finalize delivery and payment.",
       });
+      
+      // Clear cart after successful order
+      setCartItems([]);
+      localStorage.removeItem('foodMarketCart');
 
-      // Redirect user back to WhatsApp
-      window.location.href = "https://wa.me/14155238886";
+      // Optional: Redirect back to WhatsApp after a short delay
+      setTimeout(() => {
+        // This is a common way to link back to WhatsApp
+        window.location.href = `https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`;
+      }, 2000);
+
 
     } catch (err: any) {
       console.error("Order placement error:", err);
@@ -238,9 +223,10 @@ const Index = () => {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
-        onRemoveItem={(productId) => handleRemoveFromCart(String(productId))}
-        onUpdateQuantity={(productId, newQuantity) => handleUpdateQuantity(String(productId), newQuantity)}
+        onRemoveItem={handleRemoveFromCart}
+        onUpdateQuantity={handleUpdateQuantity}
         onPlaceOrder={handlePlaceOrder}
+        isPlacingOrder={isPlacingOrder}
       />
     </div>
   );

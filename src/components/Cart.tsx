@@ -1,4 +1,3 @@
-
 import {
   Sheet,
   SheetContent,
@@ -18,8 +17,8 @@ interface CartProps {
   isOpen: boolean;
   onClose: () => void;
   items: CartItem[];
-  onRemoveItem: (productId: number) => void;
-  onUpdateQuantity: (productId: number, newQuantity: number) => void;
+  onRemoveItem: (productId: string) => void;
+  onUpdateQuantity: (productId: string, newQuantity: number) => void;
   onPlaceOrder: () => void;
 }
 
@@ -34,11 +33,11 @@ export const Cart = ({
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const incrementQuantity = (productId: number, currentQuantity: number) => {
+  const incrementQuantity = (productId: string, currentQuantity: number) => {
     onUpdateQuantity(productId, Math.min(currentQuantity + 1, 99));
   };
 
-  const decrementQuantity = (productId: number, currentQuantity: number) => {
+  const decrementQuantity = (productId: string, currentQuantity: number) => {
     if (currentQuantity > 1) {
       onUpdateQuantity(productId, currentQuantity - 1);
     }
@@ -58,52 +57,104 @@ export const Cart = ({
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between p-4 bg-secondary rounded-lg"
+                  className="p-4 bg-secondary rounded-lg"
                 >
-                  <div className="flex items-center space-x-4 flex-1">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-gray-500">
-                        ₵{item.price.toFixed(2)} {item.unit}
-                      </p>
-                      <p className="text-sm font-semibold">
-                        Total: ₵{(item.price * item.quantity).toFixed(2)}
-                      </p>
+                  {/* Desktop Layout */}
+                  <div className="hidden sm:flex items-center justify-between">
+                    <div className="flex items-center space-x-4 flex-1">
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          ₵{item.price.toFixed(2)} {item.unit}
+                        </p>
+                        <p className="text-sm font-semibold">
+                          Total: ₵{(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center border rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => decrementQuantity(item.id, item.quantity)}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => incrementQuantity(item.id, item.quantity)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-red-500 hover:text-red-700"
+                        onClick={() => onRemoveItem(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center border rounded-lg">
+
+                  {/* Mobile Layout */}
+                  <div className="sm:hidden">
+                    <div className="flex items-start space-x-3 mb-3">
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-sm">{item.name}</h3>
+                        <p className="text-xs text-gray-500">
+                          ₵{item.price.toFixed(2)} {item.unit}
+                        </p>
+                        <p className="text-sm font-semibold">
+                          Total: ₵{(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center border rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => decrementQuantity(item.id, item.quantity)}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => incrementQuantity(item.id, item.quantity)}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8"
-                        onClick={() => decrementQuantity(item.id, item.quantity)}
+                        className="h-8 w-8 text-red-500 hover:text-red-700"
+                        onClick={() => onRemoveItem(item.id)}
                       >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-8 text-center text-sm">{item.quantity}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => incrementQuantity(item.id, item.quantity)}
-                      >
-                        <Plus className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-red-500 hover:text-red-700"
-                      onClick={() => onRemoveItem(item.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               ))}

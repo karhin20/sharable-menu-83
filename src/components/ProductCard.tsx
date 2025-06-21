@@ -67,15 +67,15 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
         <p className="text-gray-600 mt-1 text-sm">{product.description}</p>
-        <div className="mt-4 flex items-center justify-between">
-          <div>
-            <span className="text-xl font-bold text-primary">
-              ₵{product.price.toFixed(2)}
-            </span>
-            <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
-          </div>
-          {product.inStock ? (
-            <div className="flex items-center gap-2">
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <span className="text-xl font-bold text-primary">
+                ₵{product.price.toFixed(2)}
+              </span>
+              <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
+            </div>
+            {product.inStock && (
               <div className="flex items-center border rounded-lg">
                 <Button
                   variant="ghost"
@@ -95,10 +95,17 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <Button onClick={handleAddToCart}>Add to Cart</Button>
-            </div>
+            )}
+          </div>
+          {product.inStock ? (
+            <Button 
+              onClick={handleAddToCart}
+              className="w-full"
+            >
+              Add to Cart
+            </Button>
           ) : (
-            <Button disabled>Out of Stock</Button>
+            <Button disabled className="w-full">Out of Stock</Button>
           )}
         </div>
       </div>

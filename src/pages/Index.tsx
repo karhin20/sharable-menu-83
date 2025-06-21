@@ -87,12 +87,12 @@ const Index = () => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
+
   useEffect(() => {
     localStorage.setItem('foodMarketCart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Filter products based on search and category
+
   const filteredProducts = useMemo(() => {
     return productList.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

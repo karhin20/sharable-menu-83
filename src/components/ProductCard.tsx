@@ -13,9 +13,10 @@ interface ProductCardProps {
 export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
+  const isAvailable = product.available_stock > 0;
 
   const handleAddToCart = () => {
-    if (!product.inStock) return;
+    if (!isAvailable) return;
     
     onAddToCart(product, quantity);
     toast({
@@ -46,7 +47,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 animate-fade-in ${!product.inStock ? 'opacity-60' : ''}`}>
+    <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-1 animate-fade-in ${!isAvailable ? 'opacity-60' : ''}`}>
       <div className="relative">
         <img
           src={product.image_url}
@@ -58,7 +59,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         >
           {product.category}
         </Badge>
-        {!product.inStock && (
+        {!isAvailable && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <Badge variant="destructive">Out of Stock</Badge>
           </div>
@@ -75,7 +76,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               </span>
               <span className="text-sm text-gray-500 ml-1">{product.unit}</span>
             </div>
-            {product.inStock && (
+            {isAvailable && (
               <div className="flex items-center border rounded-lg">
                 <Button
                   variant="ghost"
@@ -97,7 +98,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               </div>
             )}
           </div>
-          {product.inStock ? (
+          {isAvailable ? (
             <Button 
               onClick={handleAddToCart}
               className="w-full"

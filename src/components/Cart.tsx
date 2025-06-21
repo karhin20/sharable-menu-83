@@ -48,11 +48,13 @@ export const Cart = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg">
+      <SheetContent className="w-full sm:max-w-lg flex flex-col">
         <SheetHeader>
           <SheetTitle>Your Cart ({totalItems} items)</SheetTitle>
         </SheetHeader>
-        <ScrollArea className="h-[calc(100vh-12rem)] mt-4">
+        
+        {/* Make the middle section scrollable and flexible */}
+        <div className="flex-1 overflow-y-auto -mx-6 px-6 mt-4">
           {items.length === 0 ? (
             <p className="text-center text-gray-500 mt-8">Your cart is empty</p>
           ) : (
@@ -163,8 +165,9 @@ export const Cart = ({
               ))}
             </div>
           )}
-        </ScrollArea>
-        <SheetFooter>
+        </div>
+        
+        <SheetFooter className="mt-auto">
           <div className="w-full">
             <div className="flex justify-between items-center font-bold text-lg mb-4">
               <span>Subtotal</span>

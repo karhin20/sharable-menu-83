@@ -3,17 +3,16 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-// Zod schema for validation
+// Zod schema for a single product to ensure type safety
 const ProductSchema = z.object({
   id: z.string(),
-  created_at: z.string().datetime(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable().optional(),
   price: z.number(),
-  image_url: z.string().url(),
-  category: z.string(),
-  unit: z.string(),
-  available_stock: z.boolean(),
+  image_url: z.string().url().nullable().optional(),
+  category: z.string().nullable().optional(),
+  unit: z.string().nullable().optional(),
+  available_stock: z.number(),
 });
 
 export type Product = z.infer<typeof ProductSchema>;

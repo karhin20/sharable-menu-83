@@ -166,22 +166,13 @@ const Index = () => {
       const res = await axios.post("/confirm-items", orderPayload);
       
       toast({
-        title: "Order confirmed!",
-        description: (
-          <div className="space-y-2">
-            <p>Please check your WhatsApp for delivery options and payment details.</p>
-            <p className="text-sm text-gray-600">
-              You'll be asked to choose between delivery or pickup, and if delivery is selected, 
-              you'll need to share your location.
-            </p>
-          </div>
-        ),
-        duration: 15000,
+        title: "Order Placed!",
+        description: "We've received your order. Please return to WhatsApp to finalize delivery and payment.",
       });
 
-      // Clear cart and close it
-      setCartItems([]);
-      setIsCartOpen(false);
+      // Redirect user back to WhatsApp
+      window.location.href = "https://wa.me/14155238886";
+
     } catch (err: any) {
       console.error("Order placement error:", err);
       toast({

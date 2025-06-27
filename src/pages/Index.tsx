@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 // Configure axios defaults

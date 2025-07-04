@@ -6,14 +6,14 @@ import { CheckCircle } from "lucide-react"; // Assuming lucide-react for icons
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
 const PaymentSuccess = () => {
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get the order_id from the URL query parameters
+    // Get the order_number from the URL query parameters
     const params = new URLSearchParams(window.location.search);
-    const id = params.get("order_id");
-    if (id) {
-      setOrderId(id);
+    const num = params.get("order_number");
+    if (num) {
+      setOrderNumber(num);
     }
   }, []);
 
@@ -25,9 +25,9 @@ const PaymentSuccess = () => {
         <p className="text-gray-700 mb-6 text-lg">
           Thank you for your payment. Your order has been successfully placed and is now processing.
         </p>
-        {orderId && (
+        {orderNumber && (
           <p className="text-gray-800 text-lg font-medium mb-6">
-            Your Order ID: <span className="text-emerald-600 font-bold">{orderId}</span>
+            Your Order ID: <span className="text-emerald-600 font-bold">{orderNumber}</span>
           </p>
         )}
         <p className="text-gray-600 mb-8">

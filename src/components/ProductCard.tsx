@@ -26,6 +26,8 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
   const isAvailable = product.available_stock > 0;
 
   const handleAddToCart = async () => {
@@ -77,6 +79,28 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     return icons[category as keyof typeof icons] || "📦";
   };
 
+  // Generate a fallback image based on category
+  const getFallbackImage = (category: string) => {
+    const fallbackImages = {
+      tubers: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRkZCNzAwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5SUPC90ZXh0Pgo8L3N2Zz4K",
+      grains: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRkZEMDAwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn4a+PC90ZXh0Pgo8L3N2Zz4K",
+      vegetables: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMDBDNzAwIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KwPC90ZXh0Pgo8L3N2Zz4K",
+      oils: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOUM0M0Y2Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5K2PC90ZXh0Pgo8L3N2Zz4K",
+      fruits: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRkY0NDQ0Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KUPC90ZXh0Pgo8L3N2Zz4K",
+      legumes: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMzM5OUZGIi8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5K4PC90ZXh0Pgo8L3N2Zz4K",
+    };
+    return fallbackImages[category as keyof typeof fallbackImages] || "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCfk5o8L3RleHQ+Cjwvc3ZnPgo=";
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
   return (
     <div 
       className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 animate-in fade-in slide-in-from-bottom-4 ${
@@ -90,10 +114,22 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       
       {/* Image container with overlay effects */}
       <div className="relative overflow-hidden">
+        {/* Loading skeleton */}
+        {imageLoading && !imageError && (
+          <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
+            <div className="w-12 h-12 bg-gray-400 rounded-full animate-pulse"></div>
+          </div>
+        )}
+        
+        {/* Product image with error handling */}
         <img
-          src={product.image_url}
+          src={imageError ? getFallbackImage(product.category) : product.image_url}
           alt={product.name}
-          className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+          className={`w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110 ${
+            imageLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          onError={handleImageError}
+          onLoad={handleImageLoad}
         />
         
         {/* Gradient overlay */}
@@ -106,6 +142,13 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           <span className="mr-1">{getCategoryIcon(product.category)}</span>
           {product.category}
         </Badge>
+
+        {/* Fallback image indicator */}
+        {imageError && (
+          <div className="absolute top-3 right-12 bg-amber-500/90 backdrop-blur-sm text-white rounded-full p-1.5 shadow-lg">
+            <Zap className="h-3 w-3" />
+          </div>
+        )}
 
         {/* Availability indicator */}
         <div className="absolute top-3 right-3">

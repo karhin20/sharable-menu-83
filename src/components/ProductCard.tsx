@@ -13,7 +13,8 @@ import {
   Zap,
   CheckCircle2,
   XCircle,
-  Sparkles
+  Sparkles,
+  Loader2
 } from "lucide-react";
 
 interface ProductCardProps {
@@ -28,7 +29,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-  const isAvailable = product.available_stock > 0;
+  const isAvailable = product.available_stock === true;
 
   const handleAddToCart = async () => {
     if (!isAvailable) return;

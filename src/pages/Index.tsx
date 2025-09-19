@@ -305,12 +305,9 @@ const Index = () => {
 
         {/* Enhanced Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent mb-4">
-            Fresh & Local Produce
+          <h2 className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent mb-4">
+           Carefully sourced from farmers and delivered fresh to your doorstep
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover the finest selection of Ghanaian produce, carefully sourced from local farmers and delivered fresh to your doorstep.
-          </p>
         </div>
         
         <SearchAndFilters

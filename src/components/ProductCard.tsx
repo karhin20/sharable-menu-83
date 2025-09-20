@@ -127,7 +127,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <img
           src={imageError ? getFallbackImage(product.category) : product.image_url}
           alt={product.name}
-          className={`w-full h-48 object-cover transition-all duration-300 group-hover:scale-110 blur-[2px] group-hover:blur-none ${
+          className={`w-full h-48 object-cover transition-all duration-300 group-hover:scale-110 group-hover:blur-[2px] ${
             imageLoading ? 'opacity-0' : 'opacity-100'
           }`}
           onError={handleImageError}

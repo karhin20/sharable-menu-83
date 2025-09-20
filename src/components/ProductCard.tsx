@@ -104,7 +104,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   return (
     <div 
-      className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 ${
+      className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 flex flex-col ${
         !isAvailable ? 'opacity-60 grayscale' : ''
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -198,91 +198,92 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       </div>
 
       {/* Content section */}
-      <div className="p-5 relative">
-        {/* Product name with gradient text */}
-        <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors duration-300">
-          {product.name}
-        </h3>
-        
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
-          {product.description}
-        </p>
-
-        {/* Price section with modern styling */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
-              ₵{product.price.toFixed(2)}
-            </span>
-            <span className="text-sm text-gray-500 font-medium">{product.unit}</span>
-          </div>
+      <div className="p-5 relative flex flex-col flex-grow">
+        <div className="flex-grow">
+          {/* Product name with gradient text */}
+          <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+            {product.name}
+          </h3>
           
-          {/* Fresh indicator */}
-          <div className="flex items-center gap-1 text-emerald-600">
-            <Leaf className="h-4 w-4" />
-            <span className="text-xs font-medium">Fresh</span>
-          </div>
+          {/* Description */}
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
         </div>
 
-        {/* Quantity selector and add to cart */}
+        {/* Interactive Price/Action Area */}
         {isAvailable && (
-          <div className="space-y-3">
-            {/* Quantity selector with modern styling */}
-            <div className="flex items-center justify-center">
-              <div className="flex items-center bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-9 hover:bg-gray-100 rounded-none"
-                  onClick={decrementQuantity}
-                  disabled={quantity <= 1}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="w-12 text-center font-semibold text-gray-800">{quantity}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 w-9 hover:bg-gray-100 rounded-none"
-                  onClick={incrementQuantity}
-                  disabled={quantity >= 99}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
+          <div className="relative h-[88px] mt-auto">
+            {/* Price section (visible by default) */}
+            <div className={`absolute inset-0 flex items-center justify-between transition-all duration-300 ease-in-out ${isHovered ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'}`}>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
+                  ₵{product.price.toFixed(2)}
+                </span>
+                <span className="text-sm text-gray-500 font-medium">{product.unit}</span>
+              </div>
+              <div className="flex items-center gap-1 text-emerald-600">
+                <Leaf className="h-4 w-4" />
+                <span className="text-xs font-medium">Fresh</span>
               </div>
             </div>
 
-            {/* Add to cart button with modern styling */}
-            <Button 
-              onClick={handleAddToCart}
-              disabled={isAdding}
-              className="w-full bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl"
-            >
-              {isAdding ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Add to Cart
-                </>
-              )}
-            </Button>
+            {/* Actions (visible on hover) */}
+            <div className={`absolute inset-0 flex flex-col justify-center transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+              <div className="space-y-3">
+                {/* Quantity selector with modern styling */}
+                <div className="flex items-center justify-center">
+                  <div className="flex items-center bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 hover:bg-gray-100 rounded-none"
+                      onClick={decrementQuantity}
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="w-12 text-center font-semibold text-gray-800">{quantity}</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 hover:bg-gray-100 rounded-none"
+                      onClick={incrementQuantity}
+                      disabled={quantity >= 99}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Add to cart button with modern styling */}
+                <Button 
+                  onClick={handleAddToCart}
+                  disabled={isAdding}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl"
+                >
+                  {isAdding ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding...</>
+                  ) : (
+                    <><ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart</>
+                  )}
+                </Button>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Out of stock button */}
         {!isAvailable && (
-          <Button 
-            disabled 
-            className="w-full bg-gray-200 text-gray-500 border-0 rounded-xl py-3 font-semibold"
-          >
-            <XCircle className="mr-2 h-4 w-4" />
-            Out of Stock
-          </Button>
+          <div className="h-[88px] flex items-center mt-auto">
+            <Button 
+              disabled 
+              className="w-full bg-gray-200 text-gray-500 border-0 rounded-xl py-3 font-semibold"
+            >
+              <XCircle className="mr-2 h-4 w-4" />
+              Out of Stock
+            </Button>
+          </div>
         )}
 
         {/* Subtle sparkle effect on hover */}

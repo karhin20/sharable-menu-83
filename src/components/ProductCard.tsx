@@ -14,7 +14,8 @@ import {
   CheckCircle2,
   XCircle,
   Sparkles,
-  Loader2
+  Loader2,
+  Eye
 } from "lucide-react";
 
 interface ProductCardProps {
@@ -126,7 +127,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <img
           src={imageError ? getFallbackImage(product.category) : product.image_url}
           alt={product.name}
-          className={`w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110 ${
+          className={`w-full h-48 object-cover transition-all duration-300 group-hover:scale-110 blur-sm group-hover:blur-none ${
             imageLoading ? 'opacity-0' : 'opacity-100'
           }`}
           onError={handleImageError}
@@ -163,28 +164,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             </div>
           )}
         </div>
-
-        {/* Hover overlay with quick actions */}
-        {isHovered && isAvailable && (
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="secondary"
-                className="bg-white/90 hover:bg-white text-gray-800 border-0 shadow-lg"
-              >
-                <Heart className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                className="bg-white/90 hover:bg-white text-gray-800 border-0 shadow-lg"
-              >
-                <Star className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
 
         {/* Out of stock overlay */}
         {!isAvailable && (

@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Product, fetchProducts } from "@/data/products";
+import { AnimateOnScroll } from "@/components/AnimateOnScroll";
 import { ProductGrid } from "@/components/ProductGrid";
 import { Cart } from "@/components/Cart";
 import { Header } from "@/components/Header";
@@ -265,57 +266,67 @@ const Index = () => {
       <main className="container mx-auto py-8 px-4 relative z-10">
         {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-emerald-600">{productList.length}</p>
-                <p className="text-sm text-gray-600">Products</p>
+          <AnimateOnScroll delay={0}>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-bold text-emerald-600">{productList.length}</p>
+                  <p className="text-sm text-gray-600">Products</p>
+                </div>
+                <ShoppingBag className="h-8 w-8 text-emerald-500" />
               </div>
-              <ShoppingBag className="h-8 w-8 text-emerald-500" />
             </div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-orange-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-orange-600">{totalItems}</p>
-                <p className="text-sm text-gray-600">In Cart</p>
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={100}>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-orange-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-bold text-orange-600">{totalItems}</p>
+                  <p className="text-sm text-gray-600">In Cart</p>
+                </div>
+                <Heart className="h-8 w-8 text-orange-500" />
               </div>
-              <Heart className="h-8 w-8 text-orange-500" />
             </div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-blue-600">24/7</p>
-                <p className="text-sm text-gray-600">Available</p>
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={200}>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-bold text-blue-600">24/7</p>
+                  <p className="text-sm text-gray-600">Available</p>
+                </div>
+                <Clock className="h-8 w-8 text-blue-500" />
               </div>
-              <Clock className="h-8 w-8 text-blue-500" />
             </div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-purple-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold text-purple-600">5★</p>
-                <p className="text-sm text-gray-600">Rating</p>
+          </AnimateOnScroll>
+          <AnimateOnScroll delay={300}>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-purple-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 h-full">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-bold text-purple-600">5★</p>
+                  <p className="text-sm text-gray-600">Rating</p>
+                </div>
+                <Star className="h-8 w-8 text-purple-500" />
               </div>
-              <Star className="h-8 w-8 text-purple-500" />
             </div>
-          </div>
+          </AnimateOnScroll>
         </div>
 
         {/* Enhanced Header */}
-        <div className="text-center mb-8">
+        <AnimateOnScroll className="text-center mb-8">
           <h2 className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent mb-4">
            Carefully sourced from farmers and delivered fresh to your doorstep
           </h2>
-        </div>
+        </AnimateOnScroll>
         
-        <SearchAndFilters
-          onSearchChange={setSearchTerm}
-          onCategoryChange={setSelectedCategory}
-          selectedCategory={selectedCategory}
-          searchTerm={searchTerm}
-        />
+        <AnimateOnScroll>
+          <SearchAndFilters
+            onSearchChange={setSearchTerm}
+            onCategoryChange={setSelectedCategory}
+            selectedCategory={selectedCategory}
+            searchTerm={searchTerm}
+          />
+        </AnimateOnScroll>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center h-64">

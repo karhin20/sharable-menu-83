@@ -1,6 +1,7 @@
 import { Product } from "@/data/products";
 import { ProductCard } from "./ProductCard";
 import { Sparkles, Grid3X3 } from "lucide-react";
+import { AnimateOnScroll } from "./AnimateOnScroll";
 
 interface ProductGridProps {
   products: Product[];
@@ -11,30 +12,23 @@ export const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
   return (
     <div className="relative">
       {/* Grid header with decorative elements */}
-      <div className="flex items-center justify-center mb-8">
+      <AnimateOnScroll className="flex items-center justify-center mb-8">
         <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/50 shadow-lg">
           <Grid3X3 className="h-5 w-5 text-emerald-600" />
           <span className="text-lg font-semibold text-gray-700">Fresh Products</span>
           <Sparkles className="h-4 w-4 text-orange-500 animate-pulse" />
         </div>
-      </div>
+      </AnimateOnScroll>
 
       {/* Enhanced grid layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
         {products.map((product, index) => (
-          <div
-            key={product.id}
-            className="animate-in fade-in slide-in-from-bottom-4"
-            style={{
-              animationDelay: `${index * 100}ms`,
-              animationFillMode: 'both'
-            }}
-          >
+          <AnimateOnScroll key={product.id} delay={index * 50}>
             <ProductCard
               product={product}
               onAddToCart={onAddToCart}
             />
-          </div>
+          </AnimateOnScroll>
         ))}
       </div>
 

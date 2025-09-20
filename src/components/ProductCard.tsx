@@ -104,7 +104,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   return (
     <div 
-      className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 animate-in fade-in slide-in-from-bottom-4 ${
+      className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 ${
         !isAvailable ? 'opacity-60 grayscale' : ''
       }`}
       onMouseEnter={() => setIsHovered(true)}

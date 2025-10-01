@@ -93,14 +93,14 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   return (
     <div 
-      className={`group relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 flex flex-col ${
+      className={`group relative bg-emerald-50/80 group-hover:bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-105 hover:-translate-y-2 flex flex-col ${
         !isAvailable ? 'opacity-60 grayscale' : ''
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Animated background gradient */}
-      <div className={`absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+      <div className={`absolute inset-0 bg-emerald-500 opacity-5 group-hover:opacity-0 transition-opacity duration-500`}></div>
       
       {/* Image container with overlay effects */}
       <div className="relative overflow-hidden">
@@ -168,7 +168,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       <div className="p-5 relative flex flex-col flex-grow">
         <div className="flex-grow">
           {/* Product name with gradient text */}
-          <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-emerald-600 transition-colors duration-300">
+          <h3 className="text-lg font-bold text-emerald-600 mb-2 group-hover:text-gray-800 transition-colors duration-300">
             {product.name}
           </h3>
           

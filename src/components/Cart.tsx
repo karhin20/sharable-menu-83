@@ -64,7 +64,7 @@ export const Cart = ({
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-full sm:max-w-lg flex flex-col bg-gradient-to-br from-emerald-50 via-white to-orange-50">
-        <SheetHeader className="bg-gradient-to-r from-emerald-600 to-orange-500 text-white -mx-6 -mt-6 px-6 py-4 rounded-b-2xl">
+        <SheetHeader className="bg-emerald-600 text-white -mx-6 -mt-6 px-6 py-4 rounded-b-2xl">
           <div className="flex items-center gap-3">
             <ShoppingCart className="h-6 w-6" />
             <SheetTitle className="text-xl font-bold">Your Cart</SheetTitle>
@@ -115,7 +115,7 @@ export const Cart = ({
                             <span className="text-xs font-medium">Fresh</span>
                           </div>
                         </div>
-                        <p className="text-sm font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
+                        <p className="text-sm font-bold text-emerald-600">
                           Total: ₵{(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
@@ -173,7 +173,7 @@ export const Cart = ({
                             <span className="text-xs font-medium">Fresh</span>
                           </div>
                         </div>
-                        <p className="text-sm font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
+                        <p className="text-sm font-bold text-emerald-600">
                           Total: ₵{(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
@@ -221,12 +221,12 @@ export const Cart = ({
                 <Sparkles className="h-5 w-5 text-emerald-600" />
                 <span className="font-bold text-lg text-gray-800">Subtotal</span>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold text-emerald-600">
                 ₵{total.toFixed(2)}
               </span>
             </div>
             <Button 
-              className="w-full bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl" 
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl" 
               size="lg" 
               onClick={onPlaceOrder}
               disabled={items.length === 0 || isPlacingOrder}

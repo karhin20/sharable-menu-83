@@ -76,7 +76,7 @@ export const SearchAndFilters = ({
           onClick={() => setFiltersVisible(!filtersVisible)}
           className={`shrink-0 transition-all duration-300 ${
             filtersVisible
-              ? 'bg-gradient-to-r from-emerald-600 to-orange-500 text-white border-transparent shadow-lg hover:opacity-95'
+              ? 'bg-emerald-600 text-white border-transparent shadow-lg hover:opacity-95'
               : ''
           }`}
         >
@@ -93,7 +93,7 @@ export const SearchAndFilters = ({
               key="all"
               className={`cursor-pointer px-4 py-2 text-sm flex items-center transition-all duration-300 rounded-full ${
                 selectedCategory === 'all' 
-                  ? 'bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-transparent shadow-lg' 
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent shadow-lg' 
                   : 'bg-white/80 hover:bg-white text-gray-800'
               }`}
               onClick={() => onCategoryChange('all')}
@@ -106,7 +106,7 @@ export const SearchAndFilters = ({
                 key={category.id}
                 className={`cursor-pointer px-4 py-2 text-sm flex items-center transition-all duration-300 rounded-full ${
                   selectedCategory === category.id 
-                    ? 'bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-transparent shadow-lg' 
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent shadow-lg' 
                     : 'bg-white/80 hover:bg-white text-gray-800'
                 }`}
                 onClick={() => onCategoryChange(category.id)}

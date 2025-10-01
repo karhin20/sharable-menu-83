@@ -57,18 +57,6 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     setQuantity(prev => Math.max(prev - 1, 1));
   };
 
-  const getCategoryGradient = (category: string) => {
-    const gradients = {
-      tubers: "from-orange-400 to-orange-600",
-      grains: "from-yellow-400 to-yellow-600",
-      vegetables: "from-emerald-400 to-emerald-600",
-      oils: "from-purple-400 to-purple-600",
-      fruits: "from-red-400 to-red-600",
-      legumes: "from-blue-400 to-blue-600",
-    };
-    return gradients[category as keyof typeof gradients] || "from-gray-400 to-gray-600";
-  };
-
   const getCategoryIcon = (category: string) => {
     const icons = {
       tubers: "🥔",
@@ -112,7 +100,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Animated background gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient(product.category)} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+      <div className={`absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
       
       {/* Image container with overlay effects */}
       <div className="relative overflow-hidden">
@@ -196,7 +184,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             {/* Price section (visible by default) */}
             <div className={`absolute inset-0 flex items-center justify-between transition-all duration-300 ease-in-out ${isHovered ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'}`}>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-orange-500 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold text-emerald-600">
                   ₵{product.price.toFixed(2)}
                 </span>
                 <span className="text-sm text-gray-500 font-medium">{product.unit}</span>
@@ -239,7 +227,7 @@ export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
                 <Button 
                   onClick={handleAddToCart}
                   disabled={isAdding}
-                  className="w-full bg-gradient-to-r from-emerald-600 to-orange-500 hover:from-emerald-700 hover:to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-semibold py-3 rounded-xl"
                 >
                   {isAdding ? (
                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Adding...</>
